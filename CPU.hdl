@@ -1,0 +1,23 @@
+CHIP CPU {
+    IN inM[16], instruction[16], reset;
+    OUT outM[16], writeM, addressM[15], pc[15];
+
+    PARTS:
+    // A register
+    ARegister(in=instruction, load=loadA, out=Aout, clk=clk);
+
+    // D register
+    DRegister(in=aluOut, load=loadD, out=Dout, clk=clk);
+
+    // ALU
+    ALU(x=Dout, y=AMux, zx=zx, nx=nx, zy=zy, ny=ny, f=f, no=no, out=aluOut, zr=zr, ng=ng);
+
+    // Mux for ALU y input
+    Mux16(a=Aout, b=inM, sel=selM, out=AMux);
+
+    // Memory control
+    DMux(in=writeMsignal, sel=memSel, a=writeM, b=_);
+
+    // Program Counter
+    PC(in=nextPC, load=pcLoad, out=pc, inc=true, reset=reset);
+}
