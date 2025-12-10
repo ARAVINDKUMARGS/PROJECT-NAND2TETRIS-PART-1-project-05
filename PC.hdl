@@ -1,0 +1,16 @@
+CHIP PC {
+    IN in[16], load, inc, reset, clk;
+    OUT out[16];
+
+    PARTS:
+    // Internal register to store PC value
+    Register(in=pcNext, load=pcLoad, clk=clk, out=out);
+
+    // Compute next value
+    Add16(a=out, b[16]=1, out=incOut);
+    Mux16(a=out, b=in, sel=load, out=loadMux);
+    Mux16(a=loadMux, b=incOut, sel=inc, out=pcNext);
+
+    // Reset
+    Mux16(a=pcNext, b[16]=false, sel=reset, out=pcNextFinal);
+}
