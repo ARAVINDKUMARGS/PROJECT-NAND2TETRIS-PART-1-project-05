@@ -1,0 +1,25 @@
+CHIP RAM8 {
+    IN in[16], load;
+    IN address[3];
+    OUT out[16];
+    IN clk;
+
+    PARTS:
+    // 8 registers (0–7)
+    Register(in=in, load=load0, clk=clk, out=out0);
+    Register(in=in, load=load1, clk=clk, out=out1);
+    Register(in=in, load=load2, clk=clk, out=out2);
+    Register(in=in, load=load3, clk=clk, out=out3);
+    Register(in=in, load=load4, clk=clk, out=out4);
+    Register(in=in, load=load5, clk=clk, out=out5);
+    Register(in=in, load=load6, clk=clk, out=out6);
+    Register(in=in, load=load7, clk=clk, out=out7);
+
+    // DMux load signal to 8 registers
+    DMux8Way(in=load, sel=address, a=load0, b=load1, c=load2, d=load3,
+             e=load4, f=load5, g=load6, h=load7);
+
+    // Mux output from 8 registers
+    Mux8Way16(a=out0, b=out1, c=out2, d=out3, e=out4, f=out5, g=out6, h=out7,
+              sel=address, out=out);
+}
